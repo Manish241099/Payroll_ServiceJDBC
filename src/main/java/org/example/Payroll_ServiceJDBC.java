@@ -18,9 +18,13 @@ public class Payroll_ServiceJDBC {
             connection = DriverManager.getConnection(url, username, password);
             System.out.println("Successfully connected....!!!!!!!");
 
-            String query = "SELECT * FROM Employee_Payroll";
+            String queryUpdate = "UPDATE employee_payroll SET Basic_pay = '3000000' WHERE name = 'Manish'";
             stmt = connection.createStatement();
-            rs = stmt.executeQuery(query);
+            int rowAffected= stmt.executeUpdate(queryUpdate);
+            System.out.println("ROW AFFECTED"+rowAffected);
+            String query="SELECT * FROM employee_payroll";
+            stmt=connection.createStatement();
+            rs=stmt.executeQuery(query);
 
             while (rs.next()) {
                 System.out.println("Employee ID: " + rs.getInt(1));
