@@ -11,20 +11,20 @@ public class Payroll_ServiceJDBC {
         String password = "Indian@123";
 
         Connection connection = null;
-        Statement stmt = null;
+        PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try {
             connection = DriverManager.getConnection(url, username, password);
             System.out.println("Successfully connected....!!!!!!!");
 
-            String queryUpdate = "UPDATE employee_payroll SET Basic_pay = '3000000' WHERE name = 'Manish'";
-            stmt = connection.createStatement();
-            int rowAffected= stmt.executeUpdate(queryUpdate);
-            System.out.println("ROW AFFECTED"+rowAffected);
+            String queryUpdate = "UPDATE employee_payroll SET Basic_pay = ? WHERE name = ?";
+            stmt = connection.prepareStatement(queryUpdate);
+            stmt.setInt(1,500000);
+            stmt.setString(2,"Smital");
+            stmt.executeUpdate();
             String query="SELECT * FROM employee_payroll";
-            stmt=connection.createStatement();
-            rs=stmt.executeQuery(query);
+             rs = stmt.executeQuery(query);
 
             while (rs.next()) {
                 System.out.println("Employee ID: " + rs.getInt(1));
