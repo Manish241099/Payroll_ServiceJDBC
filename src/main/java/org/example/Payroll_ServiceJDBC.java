@@ -11,19 +11,14 @@ public class Payroll_ServiceJDBC {
         String password = "Indian@123";
 
         Connection connection = null;
-        PreparedStatement stmt = null;
+        Statement stmt = null;
         ResultSet rs = null;
 
         try {
             connection = DriverManager.getConnection(url, username, password);
             System.out.println("Successfully connected....!!!!!!!");
-
-            String queryUpdate = "UPDATE employee_payroll SET Basic_pay = ? WHERE name = ?";
-            stmt = connection.prepareStatement(queryUpdate);
-            stmt.setInt(1,500000);
-            stmt.setString(2,"Smital");
-            stmt.executeUpdate();
-            String query="SELECT * FROM employee_payroll";
+             stmt = connection.createStatement();
+            String query="SELECT * FROM employee_payroll WHERE start_date BETWEEN CAST('2022-01-03' AS DATE) AND DATE (NOW()) ";
              rs = stmt.executeQuery(query);
 
             while (rs.next()) {
