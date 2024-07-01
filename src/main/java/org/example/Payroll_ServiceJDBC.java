@@ -13,31 +13,49 @@ public class Payroll_ServiceJDBC {
         Connection connection = null;
         Statement stmt = null;
         ResultSet rs = null;
+        ResultSet avgrs = null;
+        ResultSet maxRs = null;
+        ResultSet minRs = null;
+        ResultSet countRs = null;
+
+
 
         try {
             connection = DriverManager.getConnection(url, username, password);
             System.out.println("Successfully connected....!!!!!!!");
-             stmt = connection.createStatement();
-            String query="SELECT * FROM employee_payroll WHERE start_date BETWEEN CAST('2022-01-03' AS DATE) AND DATE (NOW()) ";
-             rs = stmt.executeQuery(query);
+            stmt = connection.createStatement();
 
+            // Sum of salaries for female employees
+            String query = "SELECT SUM(salary) FROM employee_payroll WHERE gender='female' GROUP BY gender";
+            rs = stmt.executeQuery(query);
             while (rs.next()) {
-                System.out.println("Employee ID: " + rs.getInt(1));
-                System.out.println("Employee Name: " + rs.getString(2));
-                System.out.println("Salary: " + rs.getInt(3));
-                System.out.println("Start Date: " + rs.getDate(4));
-                System.out.println("Age: " + rs.getInt(5));
-                System.out.println("Gender: " + rs.getString(6));
-                System.out.println("Phone No: " + rs.getString(7));
-                System.out.println("Address: " + rs.getString(8));
-                System.out.println("Department: " + rs.getString(9));
-                System.out.println("Basic Pay: " + rs.getString(10));
-                System.out.println("Deduction: " + rs.getString(11));
-                System.out.println("Taxable Pay: " + rs.getString(12));
-                System.out.println("Income Tax: " + rs.getString(13));
-                System.out.println("Net Pay: " + rs.getString(14));
-                System.out.println();
+                System.out.println("Total Salary of Female Employees: " + rs.getDouble(1));
             }
+
+            // Average salary for female employees
+            System.out.println("Average of salary");
+            avgrs = stmt.executeQuery("SELECT gender, AVG(salary) FROM employee_payroll WHERE gender='female' GROUP BY gender");
+            while (avgrs.next()) {
+                System.out.println("Gender: " + avgrs.getString(1));
+                System.out.println("Average Salary: " + avgrs.getDouble(2));
+            }
+
+
+            maxRs = stmt.executeQuery("SELECT MAX(salary) FROM employee_payroll");
+            while (maxRs.next()) {
+                System.out.println("Maximum Salary: " + maxRs.getDouble(1));
+            }
+
+            minRs = stmt.executeQuery("SELECT MIN(salary) FROM employee_payroll");
+            while (minRs.next()) {
+                System.out.println("Minimum Salary: " + minRs.getDouble(1));
+            }
+            countRs = stmt.executeQuery("SELECT COUNT(*) FROM employee_payroll");
+            while (countRs.next()) {
+                System.out.println("COUNT OF EMPLOYEE: " + countRs.getInt(1));
+            }
+
+
             System.out.println("READ SUCCESSFUL!");
 
         } catch (SQLException e) {
@@ -45,6 +63,8 @@ public class Payroll_ServiceJDBC {
         } finally {
             try {
                 if (rs != null) rs.close();
+                if (avgrs != null) avgrs.close();
+                if (maxRs != null) maxRs.close();
                 if (stmt != null) stmt.close();
                 if (connection != null) connection.close();
             } catch (SQLException e) {
@@ -53,3 +73,4 @@ public class Payroll_ServiceJDBC {
         }
     }
 }
+
